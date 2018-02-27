@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NSLoader;
+using System;
 using System.Collections.Generic;
 
 namespace AssetManagerExample
@@ -15,7 +16,10 @@ namespace AssetManagerExample
         SpriteBatch spriteBatch;
 
         Dictionary<string, Texture2D> badges = new Dictionary<string, Texture2D>();
+        Queue<Texture2D> qbadges = new Queue<Texture2D>();
         KeyValuePair<string,Texture2D> _current;
+        Texture2D _dequed;
+        TimeSpan time = new TimeSpan();
 
         public Game1()
         {
@@ -45,6 +49,13 @@ namespace AssetManagerExample
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             badges = Loader.ContentLoad<Texture2D>(Content,"Badges");
+            foreach (var item in badges)
+            {
+                qbadges.Enqueue(item.Value);
+            }
+            // Get the first item
+            _dequed = qbadges.Dequeue();
+            qbadges.Enqueue(_dequed);
             // TODO: use this.Content to load your game content here
         }
 
@@ -66,7 +77,13 @@ namespace AssetManagerExample
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            time += gameTime.ElapsedGameTime;
+            if(time.Seconds > 1)
+            {
+                time = new TimeSpan();
+                _dequed = qbadges.Dequeue();
+                qbadges.Enqueue(_dequed);
+            }
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -80,7 +97,7 @@ namespace AssetManagerExample
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(badges["Badges_0"],new Vector2(100,100),Color.White);
+            spriteBatch.Draw(_dequed,new Vector2(100,100),Color.White);
             spriteBatch.End();
             // TODO: Add your drawing code here
 
