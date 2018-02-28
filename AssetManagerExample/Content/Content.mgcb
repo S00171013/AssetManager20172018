@@ -181,3 +181,27 @@
 /processorParam:TextureFormat=Color
 /build:Badges/Badges_9.png
 
+#begin Sounds/Badges_0.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Badges_0.wav
+
+#begin Sounds/Badges_10.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Badges_10.wav
+
+#begin Sounds/Badges_12.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Badges_12.wav
+
+#begin Sounds/Badges_2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Badges_2.wav
+

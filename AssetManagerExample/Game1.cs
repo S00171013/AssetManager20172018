@@ -1,9 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AudioPlayer;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NSLoader;
 using System;
 using System.Collections.Generic;
+
+
 
 namespace AssetManagerExample
 {
@@ -17,9 +21,16 @@ namespace AssetManagerExample
 
         Dictionary<string, Texture2D> badges = new Dictionary<string, Texture2D>();
         Queue<Texture2D> qbadges = new Queue<Texture2D>();
-        KeyValuePair<string,Texture2D> _current;
-        Texture2D _dequed;
+        //KeyValuePair<string,Texture2D> _current;
+
+        Texture2D _dequeued;
         TimeSpan time = new TimeSpan();
+
+        // Week 6 Exercise.
+        // Create a dictionary of Sprite objects based on the some of the badges and display them on the screen.
+
+
+        SoundEffectInstance player;
 
         public Game1()
         {
@@ -48,14 +59,22 @@ namespace AssetManagerExample
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            badges = Loader.ContentLoad<Texture2D>(Content,"Badges");
+            badges = Loader.ContentLoad<Texture2D>(Content, "Badges");
             foreach (var item in badges)
             {
                 qbadges.Enqueue(item.Value);
             }
             // Get the first item
-            _dequed = qbadges.Dequeue();
-            qbadges.Enqueue(_dequed);
+            _dequeued = qbadges.Dequeue();
+            qbadges.Enqueue(_dequeued);
+
+            //AudioManager.SoundEffects = Loader.ContentLoad<SoundEffect>(Content, "Sounds");
+
+            //player = AudioManager.SoundEffects["sound1"].CreateInstance();
+            //player.Play();
+
+            //AudioManager.Play(ref player, "Badges_0");   
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -78,11 +97,14 @@ namespace AssetManagerExample
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             time += gameTime.ElapsedGameTime;
-            if(time.Seconds > 1)
+            if (time.Seconds > 1)
             {
                 time = new TimeSpan();
-                _dequed = qbadges.Dequeue();
-                qbadges.Enqueue(_dequed);
+                _dequeued = qbadges.Dequeue();
+                qbadges.Enqueue(_dequeued);
+
+                //SoundEffectInstance sound = null;
+                //AudioManager.Play(ref player, "Badges_0");
             }
             // TODO: Add your update logic here
 
@@ -97,7 +119,7 @@ namespace AssetManagerExample
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(_dequed,new Vector2(100,100),Color.White);
+            spriteBatch.Draw(_dequeued, new Vector2(100, 100), Color.White);
             spriteBatch.End();
             // TODO: Add your drawing code here
 
@@ -105,3 +127,4 @@ namespace AssetManagerExample
         }
     }
 }
+
