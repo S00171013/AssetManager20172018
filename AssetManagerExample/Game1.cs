@@ -19,22 +19,33 @@ namespace AssetManagerExample
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // Badge Texture Dictionary.
         Dictionary<string, Texture2D> badges = new Dictionary<string, Texture2D>();
+
+        // Badge Object Dictionary.
+        Dictionary<string, Badge> badgeObjects = new Dictionary<string, Badge>();
+
         Queue<Texture2D> qbadges = new Queue<Texture2D>();
         //KeyValuePair<string,Texture2D> _current;
 
-        Texture2D _dequeued;
+        Texture2D _dequeued, background;
         TimeSpan time = new TimeSpan();
+
+        SoundEffectInstance player;
 
         // Week 6 Exercise.
         // Create a dictionary of Sprite objects based on the some of the badges and display them on the screen.
+        
+
+        Queue<Badge> queueBadgeObjects = new Queue<Badge>();
+        Badge dequeuedBadge;
 
 
-        SoundEffectInstance player;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            
             Content.RootDirectory = "Content";
         }
 
@@ -48,6 +59,12 @@ namespace AssetManagerExample
         {
             // TODO: Add your initialization logic here
 
+            
+
+            // Set up badge position.
+            //Rectangle position1 = new Rectangle(viewport.Width / 2, viewport.Height / 2, 100, 100);
+
+            IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -59,23 +76,55 @@ namespace AssetManagerExample
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Load badge textures.
             badges = Loader.ContentLoad<Texture2D>(Content, "Badges");
+
+            // Ex 6         
+            // Set up viewport object.
+            Viewport viewport = GraphicsDevice.Viewport;
+
+
+            // Set up badge position.
+            Rectangle position1 = new Rectangle(viewport.Width / 2, viewport.Height / 2, 100, 100);
+
+            // Texture version.
             foreach (var item in badges)
             {
                 qbadges.Enqueue(item.Value);
+
+                // Ex 6.
+                // Set up Badge Objects.
+                badgeObjects.Add(item.Key, new Badge(this, item.Key, item.Value, false, position1));  
+                                   
             }
-            // Get the first item
+
+            // Texture version.
+            // Get the first texture item.
             _dequeued = qbadges.Dequeue();
             qbadges.Enqueue(_dequeued);
 
-            //AudioManager.SoundEffects = Loader.ContentLoad<SoundEffect>(Content, "Sounds");
+            // Add badge objects to badge object queue.
+            foreach (var badge in badgeObjects)
+            {
+                queueBadgeObjects.Enqueue(badge.Value);              
+            }
 
-            //player = AudioManager.SoundEffects["sound1"].CreateInstance();
+            // Get the first badge object.
+            dequeuedBadge = queueBadgeObjects.Dequeue();
+            queueBadgeObjects.Enqueue(dequeuedBadge);
+
+            // Load sound effects.
+            AudioManager.SoundEffects = Loader.ContentLoad<SoundEffect>(Content, "Sounds");
+
+            player = AudioManager.SoundEffects["Badges_0"].CreateInstance();
             //player.Play();
 
-            //AudioManager.Play(ref player, "Badges_0");   
+            AudioManager.Play(ref player, "Badges_0");
 
             // TODO: use this.Content to load your game content here
+
+            background = Content.Load<Texture2D>("gameOverBackground");
         }
 
         /// <summary>
@@ -94,18 +143,45 @@ namespace AssetManagerExample
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // Update current badge.
+            dequeuedBadge.Update(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            time += gameTime.ElapsedGameTime;
+
+            // Count up.
+            time += gameTime.ElapsedGameTime;                      
+
+            // What to do each second.
             if (time.Seconds > 1)
             {
+                // Reset time.
                 time = new TimeSpan();
-                _dequeued = qbadges.Dequeue();
-                qbadges.Enqueue(_dequeued);
+
+                #region Texture version.
+                // Move onto the next badge in the circular queue.
+                //_dequeued = qbadges.Dequeue();
+                //qbadges.Enqueue(_dequeued);
+                #endregion
+
+                // Ex 6
+                // Move onto the next badge item in the circular queue.
+                dequeuedBadge = queueBadgeObjects.Dequeue();
+                queueBadgeObjects.Enqueue(dequeuedBadge);
 
                 //SoundEffectInstance sound = null;
-                //AudioManager.Play(ref player, "Badges_0");
+               // AudioManager.Play(ref player, "Badges_0");
             }
+
+            
+
+            // Check if a badge has been clicked. Currently, clicking a badge with no sound effect assigned will crash the game.
+            if(dequeuedBadge.Clicked == true)
+            {
+                AudioManager.Play(ref player, dequeuedBadge.Name);
+                dequeuedBadge.Clicked = false;
+            }
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -118,9 +194,16 @@ namespace AssetManagerExample
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
             spriteBatch.Begin();
-            spriteBatch.Draw(_dequeued, new Vector2(100, 100), Color.White);
+
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+            //spriteBatch.Draw(_dequeued, new Vector2(100, 100), Color.White);  
+
             spriteBatch.End();
+
+            dequeuedBadge.Draw(spriteBatch);
+          
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

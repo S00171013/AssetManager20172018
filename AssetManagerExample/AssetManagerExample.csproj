@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AudioManager.cs" />
+    <Compile Include="Badge.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Loader.cs" />
@@ -58,19 +59,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Badges\Badges_0.png" />
-    <Content Include="Content\Badges\Badges_1.png" />
+    <Content Include="Content\Extra Badges\Badges_1.png" />
     <Content Include="Content\Badges\Badges_10.png" />
-    <Content Include="Content\Badges\Badges_11.png" />
+    <Content Include="Content\Extra Badges\Badges_11.png" />
     <Content Include="Content\Badges\Badges_12.png" />
-    <Content Include="Content\Badges\Badges_13.png" />
+    <Content Include="Content\Extra Badges\Badges_13.png" />
     <Content Include="Content\Badges\Badges_2.png" />
-    <Content Include="Content\Badges\Badges_3.png" />
-    <Content Include="Content\Badges\Badges_4.png" />
-    <Content Include="Content\Badges\Badges_5.png" />
-    <Content Include="Content\Badges\Badges_6.png" />
-    <Content Include="Content\Badges\Badges_7.png" />
-    <Content Include="Content\Badges\Badges_8.png" />
-    <Content Include="Content\Badges\Badges_9.png" />
+    <Content Include="Content\Extra Badges\Badges_3.png" />
+    <Content Include="Content\Extra Badges\Badges_4.png" />
+    <Content Include="Content\Extra Badges\Badges_5.png" />
+    <Content Include="Content\Extra Badges\Badges_6.png" />
+    <Content Include="Content\Extra Badges\Badges_7.png" />
+    <Content Include="Content\Extra Badges\Badges_8.png" />
+    <Content Include="Content\Extra Badges\Badges_9.png" />
+    <Content Include="Content\gameOverBackground.png" />
     <Content Include="Content\Sounds\Badges_0.wav" />
     <Content Include="Content\Sounds\Badges_10.wav" />
     <Content Include="Content\Sounds\Badges_12.wav" />
