@@ -25,7 +25,9 @@ namespace AssetManagerExample
         // Badge Object Dictionary.
         Dictionary<string, Badge> badgeObjects = new Dictionary<string, Badge>();
 
+        // Queue Method.
         Queue<Texture2D> qbadges = new Queue<Texture2D>();
+
         //KeyValuePair<string,Texture2D> _current;
 
         Texture2D _dequeued, background;
@@ -35,10 +37,10 @@ namespace AssetManagerExample
 
         // Week 6 Exercise.
         // Create a dictionary of Sprite objects based on the some of the badges and display them on the screen.
-        
 
-        Queue<Badge> queueBadgeObjects = new Queue<Badge>();
-        Badge dequeuedBadge;
+        // Queue Method.
+        //Queue<Badge> queueBadgeObjects = new Queue<Badge>();
+        //Badge dequeuedBadge;
 
 
 
@@ -59,9 +61,7 @@ namespace AssetManagerExample
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-            
-
+           
             // Set up badge position.
             //Rectangle position1 = new Rectangle(viewport.Width / 2, viewport.Height / 2, 100, 100);
 
@@ -92,7 +92,8 @@ namespace AssetManagerExample
             // Texture version.
             foreach (var item in badges)
             {
-                qbadges.Enqueue(item.Value);
+                // Queue Method
+                // qbadges.Enqueue(item.Value);
 
                 // Ex 6.
                 // Set up Badge Objects.
@@ -106,14 +107,14 @@ namespace AssetManagerExample
             qbadges.Enqueue(_dequeued);
 
             // Add badge objects to badge object queue.
-            foreach (var badge in badgeObjects)
-            {
-                queueBadgeObjects.Enqueue(badge.Value);              
-            }
+            //foreach (var badge in badgeObjects)
+            //{
+            //    queueBadgeObjects.Enqueue(badge.Value);              
+            //}
 
             // Get the first badge object.
-            dequeuedBadge = queueBadgeObjects.Dequeue();
-            queueBadgeObjects.Enqueue(dequeuedBadge);
+            //dequeuedBadge = queueBadgeObjects.Dequeue();
+            //queueBadgeObjects.Enqueue(dequeuedBadge);
 
             // Load sound effects.
             AudioManager.SoundEffects = Loader.ContentLoad<SoundEffect>(Content, "Sounds");
@@ -145,7 +146,7 @@ namespace AssetManagerExample
         protected override void Update(GameTime gameTime)
         {
             // Update current badge.
-            dequeuedBadge.Update(gameTime);
+            //dequeuedBadge.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
