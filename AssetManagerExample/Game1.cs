@@ -35,6 +35,10 @@ namespace AssetManagerExample
 
         SoundEffectInstance player;
 
+        // Set up position variables for the badges.
+        Rectangle[] positions = new Rectangle[5];
+        int positionCounter = 0;
+
         // Week 6 Exercise.
         // Create a dictionary of Sprite objects based on the some of the badges and display them on the screen.
 
@@ -47,8 +51,10 @@ namespace AssetManagerExample
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            
-            
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
         }
 
@@ -87,7 +93,18 @@ namespace AssetManagerExample
 
 
             // Set up badge position.
-            Rectangle position1 = new Rectangle(viewport.Width / 2, viewport.Height / 2, 100, 100);
+            // Set up menu positions
+            Rectangle position1 = new Rectangle(viewport.Width / 4, viewport.Height / 4, 100, 100);
+            Rectangle position2 = new Rectangle(position1.X, position1.Y + 70, 100, 100);
+            Rectangle position3 = new Rectangle(position2.X, position2.Y + 70, 100, 100);
+            Rectangle position4 = new Rectangle(position3.X, position3.Y + 70, 100, 100);
+            Rectangle position5 = new Rectangle(position4.X, position4.Y + 70, 100, 100);
+
+            positions[0] = position1;
+            positions[1] = position2;
+            positions[2] = position3;
+            positions[3] = position4;
+            positions[4] = position5;
 
             // Texture version.
             foreach (var item in badges)
@@ -97,14 +114,15 @@ namespace AssetManagerExample
 
                 // Ex 6.
                 // Set up Badge Objects.
-                badgeObjects.Add(item.Key, new Badge(this, item.Key, item.Value, false, position1));  
-                                   
+                badgeObjects.Add(item.Key, new Badge(this, item.Key, item.Value, false, positions[positionCounter]));
+                positionCounter++;               
             }
 
             // Texture version.
             // Get the first texture item.
-            _dequeued = qbadges.Dequeue();
-            qbadges.Enqueue(_dequeued);
+
+            //_dequeued = qbadges.Dequeue();
+            //qbadges.Enqueue(_dequeued);
 
             // Add badge objects to badge object queue.
             //foreach (var badge in badgeObjects)
@@ -122,7 +140,7 @@ namespace AssetManagerExample
             player = AudioManager.SoundEffects["Badges_0"].CreateInstance();
             //player.Play();
 
-            AudioManager.Play(ref player, "Badges_0");
+            //AudioManager.Play(ref player, "Badges_0");
 
             // TODO: use this.Content to load your game content here
 
@@ -151,40 +169,54 @@ namespace AssetManagerExample
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // Count up.
-            time += gameTime.ElapsedGameTime;                      
+            #region Timer and Queue Version - Commented out
+            //// Count up.
+            //time += gameTime.ElapsedGameTime;                      
 
-            // What to do each second.
-            if (time.Seconds > 1)
-            {
-                // Reset time.
-                time = new TimeSpan();
+            //// What to do each second.
+            //if (time.Seconds > 1)
+            //{
+            //    // Reset time.
+            //    time = new TimeSpan();
 
-                #region Texture version.
-                // Move onto the next badge in the circular queue.
-                //_dequeued = qbadges.Dequeue();
-                //qbadges.Enqueue(_dequeued);
-                #endregion
+            //    #region Texture version.
+            //    // Move onto the next badge in the circular queue.
+            //    //_dequeued = qbadges.Dequeue();
+            //    //qbadges.Enqueue(_dequeued);
+            //    #endregion
 
-                // Ex 6
-                // Move onto the next badge item in the circular queue.
-                dequeuedBadge = queueBadgeObjects.Dequeue();
-                queueBadgeObjects.Enqueue(dequeuedBadge);
+            //    // Ex 6
+            //    // Move onto the next badge item in the circular queue.
+            //    //dequeuedBadge = queueBadgeObjects.Dequeue();
+            //    //queueBadgeObjects.Enqueue(dequeuedBadge);
 
-                //SoundEffectInstance sound = null;
-               // AudioManager.Play(ref player, "Badges_0");
-            }
+            //    //SoundEffectInstance sound = null;
+            //   // AudioManager.Play(ref player, "Badges_0");
+            //}
 
-            
 
-            // Check if a badge has been clicked. Currently, clicking a badge with no sound effect assigned will crash the game.
-            if(dequeuedBadge.Clicked == true)
-            {
-                AudioManager.Play(ref player, dequeuedBadge.Name);
-                dequeuedBadge.Clicked = false;
-            }
+
+            //// Check if a badge has been clicked. Currently, clicking a badge with no sound effect assigned will crash the game.
+            //if(dequeuedBadge.Clicked == true)
+            //{
+            //    AudioManager.Play(ref player, dequeuedBadge.Name);
+            //    dequeuedBadge.Clicked = false;
+            //}
 
             // TODO: Add your update logic here
+            #endregion
+
+            foreach (var item in badgeObjects)
+            {
+                item.Value.Update(gameTime);
+
+                // Check if a menu item has been clicked.
+                if (item.Value.Clicked == true)
+                {
+                    AudioManager.Play(ref player, item.Value.Name);
+                    item.Value.Clicked = false;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -199,13 +231,20 @@ namespace AssetManagerExample
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);           
+
             //spriteBatch.Draw(_dequeued, new Vector2(100, 100), Color.White);  
 
             spriteBatch.End();
 
-            dequeuedBadge.Draw(spriteBatch);
-          
+            foreach (var item in badgeObjects)
+            {
+                item.Value.Draw(spriteBatch);
+            }
+
+            // Queue version.
+            //dequeuedBadge.Draw(spriteBatch);
+
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
