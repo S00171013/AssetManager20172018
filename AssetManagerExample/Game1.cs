@@ -67,7 +67,7 @@ namespace AssetManagerExample
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-           
+
             // Set up badge position.
             //Rectangle position1 = new Rectangle(viewport.Width / 2, viewport.Height / 2, 100, 100);
 
@@ -94,11 +94,11 @@ namespace AssetManagerExample
 
             // Set up badge position.
             // Set up menu positions
-            Rectangle position1 = new Rectangle(viewport.Width / 4, viewport.Height / 4, 100, 100);
-            Rectangle position2 = new Rectangle(position1.X, position1.Y + 70, 100, 100);
-            Rectangle position3 = new Rectangle(position2.X, position2.Y + 70, 100, 100);
-            Rectangle position4 = new Rectangle(position3.X, position3.Y + 70, 100, 100);
-            Rectangle position5 = new Rectangle(position4.X, position4.Y + 70, 100, 100);
+            Rectangle position1 = new Rectangle(viewport.Width / 2-60, viewport.Height / 2-60, 100, 100);
+            Rectangle position2 = new Rectangle(position1.X + 70, position1.Y, 100, 100);
+            Rectangle position3 = new Rectangle(position2.X + 70, position2.Y, 100, 100);
+            Rectangle position4 = new Rectangle(position3.X + 70, position3.Y, 100, 100);
+            Rectangle position5 = new Rectangle(position4.X + 70, position4.Y, 100, 100);
 
             positions[0] = position1;
             positions[1] = position2;
@@ -115,7 +115,7 @@ namespace AssetManagerExample
                 // Ex 6.
                 // Set up Badge Objects.
                 badgeObjects.Add(item.Key, new Badge(this, item.Key, item.Value, false, positions[positionCounter]));
-                positionCounter++;               
+                positionCounter++;
             }
 
             // Texture version.
@@ -231,7 +231,7 @@ namespace AssetManagerExample
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);           
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
             //spriteBatch.Draw(_dequeued, new Vector2(100, 100), Color.White);  
 
